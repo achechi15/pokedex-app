@@ -1,10 +1,10 @@
 
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { StackRootParams } from '../../Navigation/StackNavigator';
-import { Button, Text } from 'react-native-paper';
+import { Button, FAB, Text, useTheme } from 'react-native-paper';
 import { getPokemons } from '../../../actions/pokemons';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { PokeballBg } from '../../components/ui/PokeballBg';
@@ -12,12 +12,10 @@ import { pokemon } from '../../../domain/entities/pokemon';
 import { globalTheme } from '../../../config/theme/global-theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PokemonCard } from '../../components/pokemon/PokemonCard';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
-export const HomeScreen = () => {
+interface Props extends StackScreenProps<StackRootParams, "Home"> {};
 
-    const { top } = useSafeAreaInsets();
-
+export const HomeScreen = ({ navigation }: Props) => {
 
     //* Esta es la forma más simple de hacerlo y one-time usage
     // const { isLoading, data: pokemons = [] } = useQuery({
@@ -26,9 +24,12 @@ export const HomeScreen = () => {
     //     staleTime: 1000 * 60 * 60,
     // });
 
-    const queryClient = useQueryClient();
+    const { top } = useSafeAreaInsets();
 
-    console.log({queryClient});
+    const theme = useTheme();
+
+
+    const queryClient = useQueryClient();
 
     const { isLoading, data, fetchNextPage } = useInfiniteQuery({
         queryKey: ['pokemons', 'infinite'],
@@ -63,7 +64,18 @@ export const HomeScreen = () => {
                     />
                 )
             }
-
+            <FAB
+                label="Buscar"
+                style={[
+                    globalTheme.fab,
+                    {
+                        backgroundColor: theme.colors.primary,
+                    },
+                ]}
+                mode="elevated"
+                color={ theme.dark ? 'black' : 'white' }
+                onPress={() => navigation.push('Search')}
+            />
         </View>
     );
 };

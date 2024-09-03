@@ -61,7 +61,7 @@ export const SearchScreen = () => {
             />
 
 
-            { isLoadingPokemons &&
+            { isLoadingPokemons &&+
             <ActivityIndicator
                 style={{ paddingTop: 20 }}
             />
